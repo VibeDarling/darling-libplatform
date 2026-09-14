@@ -72,6 +72,7 @@ set(platform_sources
 	#src/introspection/introspection.c
 	src/os/alloc_once.c
 	src/os/atomic.c
+	src/os/feature.c
 	src/os/lock.c
 	src/os/semaphore.c
 	src/setjmp/generic/setjmperr.c
