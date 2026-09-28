@@ -27,6 +27,7 @@ if (TARGET_x86_64 OR TARGET_ARM64)
 			src/cachecontrol/x86_64/cache.S
 			src/atomics/x86_64/pfz.S
 			src/atomics/x86_64/OSAtomic.S
+			src/string/x86_64/bzero.S
 		)
 	elseif (TARGET_ARM64)
 		set(platform_64bit_sources
@@ -117,6 +118,20 @@ set_target_properties(platform PROPERTIES OUTPUT_NAME "system_platform")
 #set_property(TARGET platform APPEND_STRING PROPERTY LINK_FLAGS " -Wl,-alias_list,${CMAKE_CURRENT_SOURCE_DIR}/xcodeconfig/libplatform.aliases")
 
 #target_link_libraries(platform PRIVATE system_kernel compiler_rt)
+
+if (BUILD_TESTING AND TARGET_x86_64)
+	include(darling_exe)
+	add_darling_executable(darling_bzero_return_regress
+		tests/darling_bzero_return_regress.c
+	)
+
+	if (CMAKE_CROSSCOMPILING_EMULATOR)
+		add_test(
+			NAME darling_bzero_return_regress
+			COMMAND darling_bzero_return_regress
+		)
+	endif ()
+endif ()
 
 if (BUILD_TARGET_32BIT)
 	add_darling_static_library(platform_static32 SOURCES ${platform_sources} $<TARGET_OBJECTS:platform_32bit>)
